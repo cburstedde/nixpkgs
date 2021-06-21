@@ -32067,4 +32067,13 @@ in
   zthrottle = callPackage ../tools/misc/zthrottle { };
 
   zktree = callPackage ../applications/misc/zktree {};
+
+  p4est-sc-prev3-develop = callPackage ../development/libraries/p4est-sc {
+    p4est-sc-debugEnable = false;
+  };
+  p4est-sc = p4est-sc-prev3-develop;
+
+  p4est-sc-dbg-prev3-develop = callPackage ../development/libraries/p4est-sc { };
+  p4est-sc-dbg = p4est-sc-dbg-prev3-develop;
+
 }
