@@ -32076,4 +32076,14 @@ in
   p4est-sc-dbg-prev3-develop = callPackage ../development/libraries/p4est-sc { };
   p4est-sc-dbg = p4est-sc-dbg-prev3-develop;
 
+  p4est-prev3-develop = callPackage ../development/libraries/p4est {
+    p4est-sc = p4est-sc-prev3-develop;
+  };
+  p4est = p4est-prev3-develop;
+
+  p4est-dbg-prev3-develop = callPackage ../development/libraries/p4est {
+    p4est-sc = p4est-sc-dbg-prev3-develop;
+  };
+  p4est-dbg = p4est-dbg-prev3-develop;
+
 }
