@@ -1,7 +1,7 @@
 { lib, stdenv, fetchgit
 , which, gnum4, autoconf, automake, libtool, pkgconf
 , p4est-sc-debugEnable ? true, p4est-sc-mpiSupport ? true
-, mpi ? null, zlib
+, mpi ? null, openmpi ? null, zlib
 }:
 
 # we prefer MPICH over OpenMPI; call accordingly
@@ -50,7 +50,8 @@ stdenv.mkDerivation {
 
   dontDisableStatic = true;
   enableParallelBuilding = true;
-  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
+  doCheck = stdenv.hostPlatform == stdenv.buildPlatform
+    && (!mpiSupport || mpi != openmpi);
 
   meta = {
     branch = "prev3-develop";
