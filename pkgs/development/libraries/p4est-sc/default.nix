@@ -33,7 +33,6 @@ stdenv.mkDerivation {
     pkgconf
   ];
   propagatedBuildInputs = [ zlib ] ++ lib.optional mpiSupport mpi;
-
   inherit debugEnable mpiSupport;
 
   preConfigure = ''
@@ -62,7 +61,7 @@ stdenv.mkDerivation {
       this package is called p4est-sc, but it works standalone, too.
     '';
     homepage = https://www.p4est.org/;
-    licence = lib.licenses.lgpl21Plus;
+    license = lib.licenses.lgpl21Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };
 }

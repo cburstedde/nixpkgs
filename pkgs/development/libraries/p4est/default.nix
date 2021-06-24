@@ -56,7 +56,7 @@ stdenv.mkDerivation {
       computing to cover the domain of a simulation with an adaptive mesh.
     '';
     homepage = https://www.p4est.org/;
-    licence = lib.licenses.gpl2Plus;
+    license = lib.licenses.gpl2Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };
 }
