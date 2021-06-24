@@ -45,8 +45,7 @@ stdenv.mkDerivation {
 
   dontDisableStatic = true;
   enableParallelBuilding = true;
-  doCheck = stdenv.hostPlatform == stdenv.buildPlatform
-    && p4est-sc.doCheck;
+  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
 
   meta = {
     branch = "prev3-develop";

@@ -1,11 +1,12 @@
 { lib, stdenv, fetchgit
 , which, gnum4, autoconf, automake, libtool, pkgconf
 , p4est-sc-debugEnable ? true, p4est-sc-mpiSupport ? true
-, mpi ? null, openmpi ? null, zlib
+, mpi ? null, openmpi ? null, openssh ? null, zlib
 }:
 
 # we prefer MPICH over OpenMPI; call accordingly
 assert p4est-sc-mpiSupport -> mpi != null;
+assert p4est-sc-mpiSupport && mpi == openmpi -> openssh != null;
 
 let
   dbg = if debugEnable then "-dbg" else "";
@@ -32,7 +33,10 @@ stdenv.mkDerivation {
     libtool
     pkgconf
   ];
-  propagatedBuildInputs = [ zlib ] ++ lib.optional mpiSupport mpi;
+  propagatedBuildInputs = [ zlib ]
+    ++ lib.optional mpiSupport mpi
+    ++ lib.optional (mpiSupport && mpi == openmpi) openssh
+  ;
   inherit debugEnable mpiSupport;
 
   preConfigure = ''
@@ -50,8 +54,7 @@ stdenv.mkDerivation {
 
   dontDisableStatic = true;
   enableParallelBuilding = true;
-  doCheck = stdenv.hostPlatform == stdenv.buildPlatform
-    && (!mpiSupport || mpi != openmpi);
+  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
 
   meta = {
     branch = "prev3-develop";
