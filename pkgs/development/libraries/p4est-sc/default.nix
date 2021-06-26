@@ -64,7 +64,7 @@ stdenv.mkDerivation {
       Its main purpose is to support the p4est software library, hence
       this package is called p4est-sc, but it works standalone, too.
     '';
-    homepage = https://www.p4est.org/;
+    homepage = "https://www.p4est.org/";
     license = lib.licenses.lgpl21Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };

@@ -55,7 +55,7 @@ stdenv.mkDerivation {
       AMR refers to Adaptive Mesh Refinement, a technique in scientific
       computing to cover the domain of a simulation with an adaptive mesh.
     '';
-    homepage = https://www.p4est.org/;
+    homepage = "https://www.p4est.org/";
     license = lib.licenses.gpl2Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };
