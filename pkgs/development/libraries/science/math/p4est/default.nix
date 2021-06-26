@@ -15,8 +15,7 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     # url = "https://github.com/cburstedde/p4est.git";
     owner = "cburstedde";
-    repo = "p4est.git";
-    name = "p4est.git";
+    repo = "p4est";
     rev = "7423ac5f2b2b64490a7a92e5ddcbd251053c4dee";
     sha256 = "0vffnf48rzw6d0as4c3x1f31b4kapmdzr1hfj5rz5ngah72gqrph";
     fetchSubmodules = false;

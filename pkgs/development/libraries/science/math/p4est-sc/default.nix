@@ -21,8 +21,7 @@ stdenv.mkDerivation {
   src = fetchFromGitHub {
     # url = "https://github.com/cburstedde/libsc.git";
     owner = "cburstedde";
-    repo = "libsc.git";
-    name = "p4est-sc.git";
+    repo = "libsc";
     rev = "1ae814e3fb1cc5456652e0d77550386842cb9bfb";
     sha256 = "14vm0b162jh8399pgpsikbwq4z5lkrw9vfzy3drqykw09n6nc53z";
   };
