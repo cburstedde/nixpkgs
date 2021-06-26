@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchgit
+{ lib, stdenv, fetchFromGitHub
 , autoreconfHook, pkg-config
 , p4est-sc-debugEnable ? true, p4est-sc-mpiSupport ? true
 , mpi ? null, openmpi ? null, openssh ? null, zlib
@@ -18,9 +18,11 @@ stdenv.mkDerivation {
   version = "2021-06-14";
 
   # fetch an untagged snapshot of the prev3-develop branch
-  src = fetchgit {
+  src = fetchFromGitHub {
+    # url = "https://github.com/cburstedde/libsc.git";
+    owner = "cburstedde";
+    repo = "libsc.git";
     name = "p4est-sc.git";
-    url = "https://github.com/cburstedde/libsc.git";
     rev = "1ae814e3fb1cc5456652e0d77550386842cb9bfb";
     sha256 = "14vm0b162jh8399pgpsikbwq4z5lkrw9vfzy3drqykw09n6nc53z";
   };

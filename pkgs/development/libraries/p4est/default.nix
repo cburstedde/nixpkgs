@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchgit
+{ lib, stdenv, fetchFromGitHub
 , autoreconfHook, pkg-config
 , p4est-sc
 }:
@@ -12,9 +12,11 @@ stdenv.mkDerivation {
   version = "2021-06-22";
 
   # fetch an untagged snapshot of the prev3-develop branch
-  src = fetchgit {
+  src = fetchFromGitHub {
+    # url = "https://github.com/cburstedde/p4est.git";
+    owner = "cburstedde";
+    repo = "p4est.git";
     name = "p4est.git";
-    url = "https://github.com/cburstedde/p4est.git";
     rev = "7423ac5f2b2b64490a7a92e5ddcbd251053c4dee";
     sha256 = "0vffnf48rzw6d0as4c3x1f31b4kapmdzr1hfj5rz5ngah72gqrph";
     fetchSubmodules = false;
