@@ -1,5 +1,5 @@
 { lib, stdenv, fetchgit
-, which, gnum4, autoconf, automake, libtool, pkgconf
+, autoreconfHook, pkg-config
 , p4est-sc-debugEnable ? true, p4est-sc-mpiSupport ? true
 , mpi ? null, openmpi ? null, openssh ? null, zlib
 }:
@@ -25,23 +25,18 @@ stdenv.mkDerivation {
     sha256 = "14vm0b162jh8399pgpsikbwq4z5lkrw9vfzy3drqykw09n6nc53z";
   };
 
-  nativeBuildInputs = [
-    which
-    gnum4
-    autoconf
-    automake
-    libtool
-    pkgconf
-  ];
+  nativeBuildInputs = [ autoreconfHook pkg-config ];
   propagatedBuildInputs = [ zlib ]
     ++ lib.optional mpiSupport mpi
     ++ lib.optional (mpiSupport && mpi == openmpi) openssh
   ;
   inherit debugEnable mpiSupport;
 
+  postPatch = ''
+    echo "dist_scaclocal_DATA += config/sc_v4l2.m4" >> Makefile.am
+  '';
   preConfigure = ''
     echo "2.8.0" > .tarball-version
-    ./bootstrap
     ${if mpiSupport then "unset CC" else ""}
   '';
 

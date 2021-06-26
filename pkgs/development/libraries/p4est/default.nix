@@ -1,5 +1,5 @@
 { lib, stdenv, fetchgit
-, which, gnum4, autoconf, automake, libtool, pkgconf
+, autoreconfHook, pkg-config
 , p4est-sc
 }:
 
@@ -16,23 +16,19 @@ stdenv.mkDerivation {
     name = "p4est.git";
     url = "https://github.com/cburstedde/p4est.git";
     rev = "7423ac5f2b2b64490a7a92e5ddcbd251053c4dee";
-    sha256 = "0am8mcxlkvvg7y52207cycwh78siq88j86mjn8fv6gxikg7j0498";
+    sha256 = "0vffnf48rzw6d0as4c3x1f31b4kapmdzr1hfj5rz5ngah72gqrph";
+    fetchSubmodules = false;
   };
 
-  nativeBuildInputs = [
-    which
-    gnum4
-    autoconf
-    automake
-    libtool
-    pkgconf
-  ];
+  nativeBuildInputs = [ autoreconfHook pkg-config ];
   propagatedBuildInputs = [ p4est-sc ];
   inherit debugEnable mpiSupport;
 
+  postPatch = ''
+    sed -i -e "s:\(^\s*ACLOCAL_AMFLAGS.*\)\s@P4EST_SC_AMFLAGS@\s*$:\1 -I ${p4est-sc}/share/aclocal:" Makefile.am
+  '';
   preConfigure = ''
     echo "2.8.0" > .tarball-version
-    ./bootstrap
     ${if mpiSupport then "unset CC" else ""}
   '';
 
