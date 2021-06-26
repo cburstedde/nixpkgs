@@ -14,8 +14,8 @@ let
   mpiSupport = p4est-sc-mpiSupport;
 in
 stdenv.mkDerivation {
-  pname = "p4est-sc${dbg}-prev3-develop";
-  version = "2021-06-14";
+  pname = "p4est-sc${dbg}";
+  version = "unstable-2021-06-14";
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {

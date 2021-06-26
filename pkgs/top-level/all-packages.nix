@@ -32068,22 +32068,16 @@ in
 
   zktree = callPackage ../applications/misc/zktree {};
 
-  p4est-sc-prev3-develop = callPackage ../development/libraries/p4est-sc {
+  p4est-sc = callPackage ../development/libraries/p4est-sc {
     p4est-sc-debugEnable = false;
   };
-  p4est-sc = p4est-sc-prev3-develop;
 
-  p4est-sc-dbg-prev3-develop = callPackage ../development/libraries/p4est-sc { };
-  p4est-sc-dbg = p4est-sc-dbg-prev3-develop;
+  p4est-sc-dbg = callPackage ../development/libraries/p4est-sc { };
 
-  p4est-prev3-develop = callPackage ../development/libraries/p4est {
-    p4est-sc = p4est-sc-prev3-develop;
+  p4est = callPackage ../development/libraries/p4est { };
+
+  p4est-dbg = callPackage ../development/libraries/p4est {
+    p4est-sc = p4est-sc-dbg;
   };
-  p4est = p4est-prev3-develop;
-
-  p4est-dbg-prev3-develop = callPackage ../development/libraries/p4est {
-    p4est-sc = p4est-sc-dbg-prev3-develop;
-  };
-  p4est-dbg = p4est-dbg-prev3-develop;
 
 }
