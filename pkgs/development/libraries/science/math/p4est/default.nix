@@ -22,9 +22,7 @@ stdenv.mkDerivation {
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
-  propagatedBuildInputs = [ p4est-sc ]
-    ++ lib.optional withMetis metis;
-
+  propagatedBuildInputs = [ p4est-sc ] ++ lib.optional withMetis metis;
   inherit debugEnable mpiSupport withMetis;
 
   patches = [ ./p4est-metis.patch ];
