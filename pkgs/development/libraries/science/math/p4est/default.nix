@@ -36,11 +36,7 @@ stdenv.mkDerivation {
     ++ lib.optional mpiSupport "--enable-mpi"
   ;
 
-  makeFlags = [ "V=0" ];
-
-  dontDisableStatic = true;
-  enableParallelBuilding = true;
-  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
+  inherit (p4est-sc) makeFlags dontDisableStatic enableParallelBuilding doCheck;
 
   meta = {
     branch = "prev3-develop";
