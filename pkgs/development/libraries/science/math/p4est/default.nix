@@ -1,11 +1,13 @@
 { lib, stdenv, fetchFromGitHub
 , autoreconfHook, pkg-config
+, p4est-withMetis ? true, metis
 , p4est-sc
 }:
 
 let
   inherit (p4est-sc) debugEnable mpiSupport;
   dbg = if debugEnable then "-dbg" else "";
+  withMetis = p4est-withMetis;
 in
 stdenv.mkDerivation {
   pname = "p4est${dbg}";
@@ -20,9 +22,12 @@ stdenv.mkDerivation {
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
-  propagatedBuildInputs = [ p4est-sc ];
-  inherit debugEnable mpiSupport;
+  propagatedBuildInputs = [ p4est-sc ]
+    ++ lib.optional withMetis metis;
 
+  inherit debugEnable mpiSupport withMetis;
+
+  patches = [ ./p4est-metis.patch ];
   postPatch = ''
     sed -i -e "s:\(^\s*ACLOCAL_AMFLAGS.*\)\s@P4EST_SC_AMFLAGS@\s*$:\1 -I ${p4est-sc}/share/aclocal:" Makefile.am
   '';
@@ -32,6 +37,7 @@ stdenv.mkDerivation {
   '';
 
   configureFlags = [ "--with-sc=${p4est-sc}" ]
+    ++ lib.optional withMetis "--with-metis"
     ++ lib.optional debugEnable "--enable-debug"
     ++ lib.optional mpiSupport "--enable-mpi"
   ;
