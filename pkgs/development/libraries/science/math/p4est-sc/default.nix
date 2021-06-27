@@ -1,12 +1,8 @@
 { lib, stdenv, fetchFromGitHub
 , autoreconfHook, pkg-config
 , p4est-sc-debugEnable ? true, p4est-sc-mpiSupport ? true
-, mpi ? null, openmpi ? null, openssh ? null, zlib
+, mpi, openmpi, openssh, zlib
 }:
-
-# we prefer MPICH over OpenMPI; call accordingly
-assert p4est-sc-mpiSupport -> mpi != null;
-assert p4est-sc-mpiSupport && mpi == openmpi -> openssh != null;
 
 let
   dbg = if debugEnable then "-dbg" else "";
@@ -19,7 +15,6 @@ stdenv.mkDerivation {
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {
-    # url = "https://github.com/cburstedde/libsc.git";
     owner = "cburstedde";
     repo = "libsc";
     rev = "1ae814e3fb1cc5456652e0d77550386842cb9bfb";
@@ -61,6 +56,7 @@ stdenv.mkDerivation {
       this package is called p4est-sc, but it works standalone, too.
     '';
     homepage = "https://www.p4est.org/";
+    downloadPage = "https://github.com/cburstedde/libsc.git";
     license = lib.licenses.lgpl21Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };

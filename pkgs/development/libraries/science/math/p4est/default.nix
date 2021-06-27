@@ -13,12 +13,10 @@ stdenv.mkDerivation {
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {
-    # url = "https://github.com/cburstedde/p4est.git";
     owner = "cburstedde";
     repo = "p4est";
     rev = "7423ac5f2b2b64490a7a92e5ddcbd251053c4dee";
     sha256 = "0vffnf48rzw6d0as4c3x1f31b4kapmdzr1hfj5rz5ngah72gqrph";
-    fetchSubmodules = false;
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
@@ -53,6 +51,7 @@ stdenv.mkDerivation {
       computing to cover the domain of a simulation with an adaptive mesh.
     '';
     homepage = "https://www.p4est.org/";
+    downloadPage = "https://github.com/cburstedde/p4est.git";
     license = lib.licenses.gpl2Plus;
     maintainers = [ lib.maintainers.cburstedde ];
   };
