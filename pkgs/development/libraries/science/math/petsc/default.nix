@@ -1,5 +1,12 @@
-{ lib, stdenv , darwin , fetchurl , blas , gfortran , lapack , python }:
+{ lib, stdenv, darwin
+, fetchurl, gfortran
+, blas, lapack, python
+, p4est, mpi
+}:
 
+let
+  inherit (p4est) mpiSupport;
+in
 stdenv.mkDerivation rec {
   pname = "petsc";
   version = "3.14.2";
@@ -9,7 +16,9 @@ stdenv.mkDerivation rec {
     sha256 = "04vy3qyakikslc58qyv8c9qrwlivix3w6znc993i37cvfg99dch9";
   };
 
-  nativeBuildInputs = [ blas gfortran gfortran.cc.lib lapack python ];
+  nativeBuildInputs = [ gfortran gfortran.cc.lib ];
+  buildInputs = [ blas lapack python p4est ] ++ lib.optional mpiSupport mpi;
+  enableParallelBuilding = true;
 
   # Upstream does some hot she-py-bang stuff, this change streamlines that
   # process. The original script in upstream is both a shell script and a
@@ -40,13 +49,10 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = ''
-      Library of linear algebra algorithms for solving partial differential
-      equations
-    '';
+    description = "Linear algebra algorithms for solving partial differential equations";
     homepage = "https://www.mcs.anl.gov/petsc/index.html";
     license = licenses.bsd2;
-    maintainers = with maintainers; [ wucke13 ];
+    maintainers = with maintainers; [ wucke13 cburstedde ];
     platforms = platforms.all;
   };
 }
