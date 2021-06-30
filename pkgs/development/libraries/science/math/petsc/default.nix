@@ -1,7 +1,7 @@
 { lib, stdenv, darwin
 , fetchurl, gfortran
 , blas, lapack, python
-, p4est, mpi
+, p4est, zlib, mpi
 }:
 
 let
@@ -18,7 +18,6 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ gfortran gfortran.cc.lib ];
   buildInputs = [ blas lapack python p4est ] ++ lib.optional mpiSupport mpi;
-  enableParallelBuilding = true;
 
   # Upstream does some hot she-py-bang stuff, this change streamlines that
   # process. The original script in upstream is both a shell script and a
@@ -39,14 +38,20 @@ stdenv.mkDerivation rec {
     patchShebangs .
     configureFlagsArray=(
       $configureFlagsArray
-      "--CC=$CC"
-      "--with-cxx=$CXX"
-      "--with-fc=$FC"
-      "--with-mpi=0"
+      "--CC=${if mpiSupport then "mpicc" else "$CC"}"
+      "--with-cxx=${if mpiSupport then "mpicxx" else "$CXX"}"
+      "--with-fc=${if mpiSupport then "mpif90" else "$FC"}"
+      "--with-mpi=${if mpiSupport then "1" else "0"}"
       "--with-blas-lib=[${blas}/lib/libblas.so,${gfortran.cc.lib}/lib/libgfortran.a]"
       "--with-lapack-lib=[${lapack}/lib/liblapack.so,${gfortran.cc.lib}/lib/libgfortran.a]"
+      "--with-p4est=1"
+      "--with-zlib-include=${zlib.dev}/include"
+      "--with-zlib-lib=-L${zlib}/lib -lz"
     )
   '';
+
+  enableParallelBuilding = true;
+  inherit mpiSupport;
 
   meta = with lib; {
     description = "Linear algebra algorithms for solving partial differential equations";
