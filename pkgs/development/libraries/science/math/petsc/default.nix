@@ -1,11 +1,13 @@
 { lib, stdenv, darwin
 , fetchurl, gfortran
 , blas, lapack, python
+, petsc-withp4est ? true
 , p4est, zlib, mpi
 }:
 
 let
-  inherit (p4est) mpiSupport;
+  mpiSupport = if withp4est then p4est.mpiSupport else false;
+  withp4est = petsc-withp4est;
 in
 stdenv.mkDerivation rec {
   pname = "petsc";
@@ -17,7 +19,10 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [ gfortran gfortran.cc.lib ];
-  buildInputs = [ blas lapack python p4est ] ++ lib.optional mpiSupport mpi;
+  buildInputs = [ blas lapack python ]
+    ++ lib.optional mpiSupport mpi
+    ++ lib.optional withp4est p4est
+  ;
 
   # Upstream does some hot she-py-bang stuff, this change streamlines that
   # process. The original script in upstream is both a shell script and a
@@ -44,14 +49,16 @@ stdenv.mkDerivation rec {
       "--with-mpi=${if mpiSupport then "1" else "0"}"
       "--with-blas-lib=[${blas}/lib/libblas.so,${gfortran.cc.lib}/lib/libgfortran.a]"
       "--with-lapack-lib=[${lapack}/lib/liblapack.so,${gfortran.cc.lib}/lib/libgfortran.a]"
-      "--with-p4est=1"
-      "--with-zlib-include=${zlib.dev}/include"
-      "--with-zlib-lib=-L${zlib}/lib -lz"
+      ${if withp4est then ''
+        "--with-p4est=1"
+        "--with-zlib-include=${zlib.dev}/include"
+        "--with-zlib-lib=-L${zlib}/lib -lz"
+      '' else ""}
     )
   '';
 
   enableParallelBuilding = true;
-  inherit mpiSupport;
+  inherit mpiSupport withp4est;
 
   meta = with lib; {
     description = "Linear algebra algorithms for solving partial differential equations";
