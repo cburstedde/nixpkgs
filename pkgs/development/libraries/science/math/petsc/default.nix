@@ -1,8 +1,15 @@
-{ lib, stdenv, darwin
-, fetchurl, gfortran
-, blas, lapack, python
+{ lib
+, stdenv
+, fetchurl
+, darwin
+, gfortran
+, python
+, blas
+, lapack
+, mpi
 , petsc-withp4est ? true
-, p4est, zlib, mpi
+, p4est
+, zlib
 }:
 
 let
@@ -18,8 +25,8 @@ stdenv.mkDerivation rec {
     sha256 = "04vy3qyakikslc58qyv8c9qrwlivix3w6znc993i37cvfg99dch9";
   };
 
-  nativeBuildInputs = [ gfortran gfortran.cc.lib ];
-  buildInputs = [ blas lapack python ]
+  nativeBuildInputs = [ python gfortran gfortran.cc.lib ];
+  buildInputs = [ blas lapack ]
     ++ lib.optional mpiSupport mpi
     ++ lib.optional withp4est p4est
   ;
