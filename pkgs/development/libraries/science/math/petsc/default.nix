@@ -64,14 +64,14 @@ stdenv.mkDerivation rec {
     )
   '';
 
-  enableParallelBuilding = true;
   inherit mpiSupport withp4est;
+  enableParallelBuilding = true;
+  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
 
   meta = with lib; {
     description = "Linear algebra algorithms for solving partial differential equations";
     homepage = "https://www.mcs.anl.gov/petsc/index.html";
     license = licenses.bsd2;
     maintainers = with maintainers; [ wucke13 cburstedde ];
-    platforms = platforms.all;
   };
 }
