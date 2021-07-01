@@ -6,14 +6,16 @@
 , python
 , blas
 , lapack
-, mpi
+, mpi                   # generic mpi dependency
+, openmpi               # to compare against mpi
+, openssh               # required for openmpi tests
 , petsc-withp4est ? true
 , p4est
-, zlib
+, zlib                  # propagated by p4est but required by petsc
 }:
 
 let
-  mpiSupport = if withp4est then p4est.mpiSupport else false;
+  mpiSupport = !withp4est || p4est.mpiSupport;
   withp4est = petsc-withp4est;
 in
 stdenv.mkDerivation rec {
@@ -28,6 +30,7 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ python gfortran gfortran.cc.lib ];
   buildInputs = [ blas lapack ]
     ++ lib.optional mpiSupport mpi
+    ++ lib.optional (mpiSupport && mpi == openmpi) openssh
     ++ lib.optional withp4est p4est
   ;
 
@@ -50,17 +53,24 @@ stdenv.mkDerivation rec {
     patchShebangs .
     configureFlagsArray=(
       $configureFlagsArray
-      "--CC=${if mpiSupport then "mpicc" else "$CC"}"
-      "--with-cxx=${if mpiSupport then "mpicxx" else "$CXX"}"
-      "--with-fc=${if mpiSupport then "mpif90" else "$FC"}"
-      "--with-mpi=${if mpiSupport then "1" else "0"}"
-      "--with-blas-lib=[${blas}/lib/libblas.so,${gfortran.cc.lib}/lib/libgfortran.a]"
-      "--with-lapack-lib=[${lapack}/lib/liblapack.so,${gfortran.cc.lib}/lib/libgfortran.a]"
+      ${if !mpiSupport then ''
+        "--CC=$CC"
+        "--with-cxx=$CXX"
+        "--with-fc=$FC"
+        "--with-mpi=0"
+      '' else ''
+        "--CC=mpicc"
+        "--with-cxx=mpicxx"
+        "--with-fc=mpif90"
+        "--with-mpi=1"
+      ''}
       ${if withp4est then ''
         "--with-p4est=1"
         "--with-zlib-include=${zlib.dev}/include"
         "--with-zlib-lib=-L${zlib}/lib -lz"
       '' else ""}
+      "--with-blas-lib=[${blas}/lib/libblas.so,${gfortran.cc.lib}/lib/libgfortran.a]"
+      "--with-lapack-lib=[${lapack}/lib/liblapack.so,${gfortran.cc.lib}/lib/libgfortran.a]"
     )
   '';
 
