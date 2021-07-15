@@ -128,7 +128,7 @@ in mkDerivation rec {
     longDescription = ''
       This project is a rewrite of what was formerly known as "Open Broadcaster
       Software", software originally designed for recording and streaming live
-      video content, efficiently
+      video content, efficiently.
     '';
     homepage = "https://obsproject.com";
     maintainers = with maintainers; [ jb55 MP2E V ];
