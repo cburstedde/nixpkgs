@@ -5,6 +5,7 @@
 , cmake
 , fdk_aac
 , ffmpeg
+, glib
 , jansson
 , libjack2
 , libxkbcommon
@@ -67,6 +68,7 @@ in mkDerivation rec {
     curl
     fdk_aac
     ffmpeg
+    glib
     jansson
     libcef
     libjack2
