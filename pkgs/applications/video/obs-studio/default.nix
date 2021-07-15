@@ -34,6 +34,7 @@
 , alsa-lib
 , pulseaudioSupport ? config.pulseaudio or stdenv.isLinux
 , libpulseaudio
+, cefSupport ? true
 , libcef
 , pipewireSupport ? stdenv.isLinux
 , pipewire
@@ -41,6 +42,7 @@
 
 let
   inherit (lib) optional optionals;
+  buildBrowser = if cefSupport then "ON" else "OFF";
 
 in mkDerivation rec {
   pname = "obs-studio";
@@ -54,7 +56,7 @@ in mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  patches = [
+  patches = lib.optionals cefSupport [
     # Lets obs-browser build against CEF 90.1.0+
     ./Enable-file-access-and-universal-access-for-file-URL.patch
 
@@ -70,7 +72,6 @@ in mkDerivation rec {
     ffmpeg
     glib
     jansson
-    libcef
     libjack2
     libv4l
     libxkbcommon
@@ -89,10 +90,11 @@ in mkDerivation rec {
   ++ optionals scriptingSupport [ luajit swig python3 ]
   ++ optional alsaSupport alsa-lib
   ++ optional pulseaudioSupport libpulseaudio
+  ++ optional cefSupport libcef
   ++ optional pipewireSupport pipewire;
 
   # Copied from the obs-linuxbrowser
-  postUnpack = ''
+  postUnpack = if cefSupport then ''
     mkdir -p cef/Release cef/Resources cef/libcef_dll_wrapper/
     for i in ${libcef}/share/cef/*; do
       cp -r $i cef/Release/
@@ -101,7 +103,7 @@ in mkDerivation rec {
     cp -r ${libcef}/lib/libcef.so cef/Release/
     cp -r ${libcef}/lib/libcef_dll_wrapper.a cef/libcef_dll_wrapper/
     cp -r ${libcef}/include cef/
-  '';
+  '' else "";
 
   # obs attempts to dlopen libobs-opengl, it fails unless we make sure
   # DL_OPENGL is an explicit path. Not sure if there's a better way
@@ -111,7 +113,8 @@ in mkDerivation rec {
     "-DOBS_VERSION_OVERRIDE=${version}"
     "-Wno-dev" # kill dev warnings that are useless for packaging
     # Add support for browser source
-    "-DBUILD_BROWSER=ON"
+    "-DBUILD_BROWSER=${buildBrowser}"
+  ] ++ lib.optionals cefSupport [
     "-DCEF_ROOT_DIR=../../cef"
   ];
 
