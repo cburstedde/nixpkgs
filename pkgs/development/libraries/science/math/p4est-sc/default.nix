@@ -12,14 +12,14 @@ let
 in
 stdenv.mkDerivation {
   pname = "p4est-sc${dbg}";
-  version = "unstable-2021-06-14";
+  version = "unstable-2021-09-17";
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {
     owner = "cburstedde";
     repo = "libsc";
-    rev = "1ae814e3fb1cc5456652e0d77550386842cb9bfb";
-    sha256 = "14vm0b162jh8399pgpsikbwq4z5lkrw9vfzy3drqykw09n6nc53z";
+    rev = "1d8ab1397cec48c71f86eaca726e1d56a2bc49a7";
+    sha256 = "01l08cgfwm30l19v00c5zrkiqd548ag8iylhxk7x1m9aad1aa15h";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
@@ -29,9 +29,6 @@ stdenv.mkDerivation {
   ;
   inherit debugEnable mpiSupport;
 
-  postPatch = ''
-    echo "dist_scaclocal_DATA += config/sc_v4l2.m4" >> Makefile.am
-  '';
   preConfigure = ''
     echo "2.8.0" > .tarball-version
     ${if mpiSupport then "unset CC" else ""}
@@ -51,9 +48,7 @@ stdenv.mkDerivation {
     export HYDRA_IFACE=lo
   '';
 
-  # disallow Darwin checks due to prototype incompatibility of qsort_r
-  # to be fixed in a future version of the source code
-  doCheck = !stdenv.isDarwin && stdenv.hostPlatform == stdenv.buildPlatform;
+  doCheck = stdenv.hostPlatform == stdenv.buildPlatform;
 
   meta = {
     branch = "prev3-develop";

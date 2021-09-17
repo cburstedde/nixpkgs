@@ -11,14 +11,14 @@ let
 in
 stdenv.mkDerivation {
   pname = "p4est${dbg}";
-  version = "unstable-2021-06-22";
+  version = "unstable-2021-09-17";
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {
     owner = "cburstedde";
     repo = "p4est";
-    rev = "7423ac5f2b2b64490a7a92e5ddcbd251053c4dee";
-    sha256 = "0vffnf48rzw6d0as4c3x1f31b4kapmdzr1hfj5rz5ngah72gqrph";
+    rev = "439bc9aae849555256ddfe4b03d1f9fe8d18ff0e";
+    sha256 = "1fyvnk4wx4lhp9sdf58a7q034jmvw1hx4clabdgffi5a48c1k5nx";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
@@ -26,10 +26,6 @@ stdenv.mkDerivation {
   buildInputs = lib.optional withMetis metis;
   inherit debugEnable mpiSupport withMetis;
 
-  patches = [ ./p4est-metis.patch ];
-  postPatch = ''
-    sed -i -e "s:\(^\s*ACLOCAL_AMFLAGS.*\)\s@P4EST_SC_AMFLAGS@\s*$:\1 -I ${p4est-sc}/share/aclocal:" Makefile.am
-  '';
   preConfigure = ''
     echo "2.8.0" > .tarball-version
     ${if mpiSupport then "unset CC" else ""}
