@@ -12,14 +12,14 @@ let
 in
 stdenv.mkDerivation {
   pname = "p4est-sc${dbg}";
-  version = "unstable-2021-09-17";
+  version = "unstable-2021-09-20";
 
   # fetch an untagged snapshot of the prev3-develop branch
   src = fetchFromGitHub {
     owner = "cburstedde";
     repo = "libsc";
-    rev = "1d8ab1397cec48c71f86eaca726e1d56a2bc49a7";
-    sha256 = "01l08cgfwm30l19v00c5zrkiqd548ag8iylhxk7x1m9aad1aa15h";
+    rev = "96dd468755971f1561dce05c695d28f7926bc7ec";
+    sha256 = "1vbvic5hffx6zraqxya1l5iw6l9m9zijasf459z4pnvd5f6yil42";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
