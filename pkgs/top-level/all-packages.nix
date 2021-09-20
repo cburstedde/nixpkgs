@@ -30444,6 +30444,13 @@ with pkgs;
     p4est-sc = p4est-sc-dbg;
   };
 
+  t8 = callPackage ../development/libraries/science/math/t8 { };
+
+  t8-dbg = callPackage ../development/libraries/science/math/t8 {
+    p4est = p4est-dbg;
+    p4est-sc = p4est-sc-dbg;
+  };
+
   petsc = callPackage ../development/libraries/science/math/petsc { };
 
   parmetis = callPackage ../development/libraries/science/math/parmetis { };
